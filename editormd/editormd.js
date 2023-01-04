@@ -549,7 +549,7 @@
                 editormd.loadCSS(loadPath + "codemirror/addon/fold/foldgutter");
             }
 
-            editormd.loadScript(loadPath + "codemirror/codemirror", function() {
+            editormd.loadScript(loadPath + "codemirror/lib/codemirror", function() {
                 editormd.$CodeMirror = CodeMirror;
 
                 editormd.loadScript(loadPath + "codemirror/modes.min", function() {
