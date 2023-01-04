@@ -30,7 +30,6 @@
 			delphi        : ["Delphi/Pascal", "pascal"],
 			erlang        : ["Erlang", "erlang"],
 			go            : ["Golang", "go"],
-			gml           : ["GameMaker Language", "gml"],
 			groovy        : ["Groovy", "groovy"],
 			html          : ["HTML", "text/html"],
 			java          : ["Java", "clike"],
@@ -86,7 +85,7 @@
                 var dialogHTML = "<div class=\"" + classPrefix + "code-toolbar\">" +
                                         dialogLang.selectLabel + "<select><option selected=\"selected\" value=\"\">" + dialogLang.selectDefaultText + "</option></select>" +
                                     "</div>" +
-                                    "<textarea placeholder=\"coding now....\" style=\"display:none;\">" + selection + "</textarea>";
+                                    "<textarea placeholder=\"" + dialogLang.placeholder + "\" style=\"display:none;\">" + selection + "</textarea>";
 
                 dialog = this.createDialog({
                     name   : dialogName,
@@ -128,10 +127,14 @@
 
                             this.hide().lockScreen(false).hideMask();
 
+                            this.remove();
+
                             return false;
                         }],
                         cancel : [lang.buttons.cancel, function() {                                   
                             this.hide().lockScreen(false).hideMask();
+
+                            this.remove();
 
                             return false;
                         }]

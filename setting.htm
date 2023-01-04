@@ -299,11 +299,11 @@
         jsubmit.button('loading');
         var postdata = jform.serialize();
         $.xpost(jform.attr('action'), postdata, function (code, message) {
-            if (code == 0) {
+            if (code === 0) {
                 $.alert(message);
                 jsubmit.text(message).delay(1000).button('reset').location(referer);
             } else {
-                $.alert('提交失败');
+                $.alert('提交失败:'+message);
                 jsubmit.button('reset');
             }
         });
