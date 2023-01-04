@@ -11,7 +11,8 @@
  */
 
 /* jshint browser: true */ 
-;(function(factory) {
+
+;(function(factory) {
     "use strict";
 
     // CommonJS/Node.js
@@ -548,7 +549,7 @@
                 editormd.loadCSS(loadPath + "codemirror/addon/fold/foldgutter");
             }
 
-            editormd.loadScript(loadPath + "codemirror/codemirror.min", function() {
+            editormd.loadScript(loadPath + "codemirror/codemirror", function() {
                 editormd.$CodeMirror = CodeMirror;
 
                 editormd.loadScript(loadPath + "codemirror/modes.min", function() {
