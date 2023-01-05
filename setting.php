@@ -1,5 +1,6 @@
 <?php !defined('DEBUG') AND exit('Access Denied.');
 
+
 if($method == 'GET') {
     $setting['sl_repeat_follow_color'] = setting_get('sl_repeat_follow_color');
     $setting['sl_repeat_follow_perpage'] = setting_get('sl_repeat_follow_perpage');

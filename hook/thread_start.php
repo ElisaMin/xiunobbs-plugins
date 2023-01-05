@@ -1,4 +1,4 @@
-<?php exit;
+?><?php
 if($action == 'rfloor') {
     $pid = param(2);
     $pageno = param('pageno', 0);
@@ -32,4 +32,4 @@ if($action == 'rfloor') {
         message(0,$return_message.'<div id="pushfloor_'.$pid.'" style="display:none;"></div>');
     }
 }
-?>
+?><?php

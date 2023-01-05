@@ -1,4 +1,4 @@
-<?php exit;
+?><?php
 if($action == 'rfloor') {
     $pid = param(2);
     $pageno = param('pageno', 0);
@@ -6,8 +6,7 @@ if($action == 'rfloor') {
     $post = post_read($pid);
     empty($post) AND message(-1, lang('post_not_exists'));
     $m_s=',';
-    if(empty($post['repeat_follow']))
-    {
+    if(empty($post['repeat_follow'])) {
         $m_s=$repeat_follows='';
         if($pageno>0) message(-1, lang('post_not_exists'));
     }
@@ -93,4 +92,4 @@ if($action == 'rfloor') {
     $r === FALSE AND message(-1, lang('update_post_failed'));
     message(0,$return_message);
 }
-?>
+?><?php

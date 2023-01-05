@@ -6,7 +6,7 @@
         var floor_c = '';
         var jfloor = xn.intval($('#r_f_c_'+pid).val());
         if(jfloor>0){floor_c = '('+jfloor+')';}
-        if(repeat.css("display")=="block"){
+        if(repeat.css("display")==="block"){
             repeat.slideToggle(500,function(){
                 floor_win.html('<i class="icon-comment-o"></i> 回复'+floor_c);
                 floor_win.removeClass('floor_win');
@@ -98,21 +98,14 @@
             $("#message"+pid).val("").focus().val(t);
         }
     }
-    function floor_reply(pid)
-    {
-        <?php
-        if(empty($user)){
-        echo 'window.location.href="'.url('user-login').'";
-';
-    }
-        else{
-        ?>
-        var floorform = $('#floor_reply_form'+pid);
+    function floor_reply(pid) {
+        <?php if (!empty($user)) { ?>
+        var floorForm = $('#floor_reply_form'+pid);
         var floorsubmit = $('#submit'+pid);
-        var postdata = floorform.serialize();
-        floorform.reset();
+        var postdata = floorForm.serialize();
+        floorForm.reset();
         floorsubmit.button('loading');
-        $.xpost(floorform.attr('action'), postdata, function(code, message) {
+        $.xpost(floorForm.attr('action'), postdata, function(code, message) {
             if(code == 0) {
                 $(message).hide().insertBefore($('#pushfloor_'+pid)).slideDown(300);
                 floorsubmit.button('reset');
@@ -126,9 +119,10 @@
                 floorsubmit.button('reset');
             }
         });
-        <?php
-        }
-        ?>
+
+        <?php } else { ?>
+        window.location.href="'<?php  echo url('user-login')?>.'";
+        <?php } ?>
         return false;
     }
 </script>

@@ -6,7 +6,7 @@
         <!--{hook post_list_inc_create_date_after.htm}-->
         <?php
         if($_post['r_f_c']>0){
-            $maxpage=ceil($_post['r_f_c']/$r_f_g);
+            $maxpage=ceil($_post['r_f_c']/$perpage);
             $pagelist='';
             if($maxpage>1)
             {
@@ -24,7 +24,7 @@
                 if($repeat_follow['uid']==$uid || $_post['floormanage']) $deltag='<a href="javascript:delrfloor('.$_post['pid'].',\''.$repeat_follow['fl'].'\');" class="post_update mr-2">删除</a>';
                 if($repeat_follow['t_uid']>0 && $repeat_follow['t_username']!='') $message_t='回复 <a href="'.url("user-".$repeat_follow['t_uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['t_username'].'</a>: ';
                 if($n<$halfpage) echo '<dd class="text-left media" id="pf_'.$_post['pid'].'_'.$repeat_follow['fl'].'"><a href="'.url("user-".$repeat_follow['uid']).'" class="mr-2"><img class="avatar-3" onerror="this.src=\'view/img/avatar.png\'"  src="'.$repeat_follow['avatar_url'].'"></a><div style="width:100%;"><span class="text-left"><a href="'.url("user-".$repeat_follow['uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['username'].'</a>: '.$message_t.$repeat_follow['message'].'</span><div class="text-muted text-right">'.$deltag.humandate($repeat_follow['update']).'<a href="javascript:showform('.$_post['pid'].',\''.$repeat_follow['username'].'\');" class="post_update ml-2">回复</a></div></div></dd>';
-                elseif($n<$r_f_g) $floor_content.='<dd class="text-left media" id="pf_'.$_post['pid'].'_'.$repeat_follow['fl'].'"><a href="'.url("user-".$repeat_follow['uid']).'" class="mr-2"><img class="avatar-3" onerror="this.src=\'view/img/avatar.png\'"  src="'.$repeat_follow['avatar_url'].'"></a><div style="width:100%;"><span class="text-left"><a href="'.url("user-".$repeat_follow['uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['username'].'</a>: '.$message_t.$repeat_follow['message'].'</span><div class="text-muted text-right">'.$deltag.humandate($repeat_follow['update']).'<a href="javascript:showform('.$_post['pid'].',\''.$repeat_follow['username'].'\');" class="post_update ml-2">回复</a></div></div></dd>';
+                elseif($n<$perpage) $floor_content.='<dd class="text-left media" id="pf_'.$_post['pid'].'_'.$repeat_follow['fl'].'"><a href="'.url("user-".$repeat_follow['uid']).'" class="mr-2"><img class="avatar-3" onerror="this.src=\'view/img/avatar.png\'"  src="'.$repeat_follow['avatar_url'].'"></a><div style="width:100%;"><span class="text-left"><a href="'.url("user-".$repeat_follow['uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['username'].'</a>: '.$message_t.$repeat_follow['message'].'</span><div class="text-muted text-right">'.$deltag.humandate($repeat_follow['update']).'<a href="javascript:showform('.$_post['pid'].',\''.$repeat_follow['username'].'\');" class="post_update ml-2">回复</a></div></div></dd>';
                 else break;
                 $message_t=$deltag='';
                 $n++;
