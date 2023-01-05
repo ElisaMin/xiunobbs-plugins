@@ -1,0 +1,19 @@
+<dd class="text-left media" id="pf_<?= $pid.'_'.$repeat_follow['fl']?>">
+    <a href="<?= url("user-".$repeat_follow['uid']) ?>" class="mr-2">
+        <img class="avatar-3" src="<?= $repeat_follow['avatar_url']?>">
+    </a>
+    <div style="width:100%;">
+        <span class="text-left">
+            <a href="<?= url("user-".$repeat_follow['uid'])?>" class="text-muted font-weight-bold"><?= $repeat_follow['username']?></a>
+            :<?php if($repeat_follow['t_uid']>0 && $repeat_follow['t_username']!='') { ?>
+                回复 <a href="<?= url("user-".$repeat_follow['t_uid']) ?>" class="text-muted font-weight-bold"><?= $repeat_follow['t_username']?></a>:
+            <?php } echo $repeat_follow['message'] ?>
+        </span>
+        <div class="text-muted text-right">
+            <?php if ($repeat_follow['uid']==$uid || $_post['floormanage']) { ?>
+                <a href="javascript:delrfloor('<?=$pid.',\''.$repeat_follow['fl']?>\'');" class="post_update mr-2">删除</a>
+            <?php } echo humandate($repeat_follow['update']) ?>
+            <a href="javascript:showform('<?=$pid.',\''.$repeat_follow['username']?>\'');" class="post_update ml-2">回复</a>
+        </div>
+    </div>
+</dd>
