@@ -1,11 +1,4 @@
-<?php
-
-/*
-	Xiuno BBS 4.0 插件实例：TAG 插件安装
-	admin/plugin-install-xn_tag.htm
-*/
-
-!defined('DEBUG') AND exit('Forbidden');
+<?php !defined('DEBUG') AND exit('Forbidden');
 
 $tablepre = $db->tablepre;
 
