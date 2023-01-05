@@ -1,0 +1,21 @@
+<?php
+$r_f_g=setting_get('sl_repeat_follow_perpage');
+$r_f_co=setting_get('sl_repeat_follow_color');
+$r_f_b_t=setting_get('sl_repeat_follow_b_t');
+$r_f_b_c=setting_get('sl_repeat_follow_b_c');
+$r_f_b_w=setting_get('sl_repeat_follow_b_w');
+$r_f_b_mw=setting_get('sl_repeat_follow_b_mw');
+$halfpage=ceil($r_f_g/2);
+$r_f_b_s=$r_f_b_smw='';
+if($r_f_b_w>0){
+	if($r_f_b_mw>0 && $r_f_b_w<100) $r_f_b_smw='min-width:'.$r_f_b_mw.'px;"';
+	$r_f_b_s=' style="width:'.$r_f_b_w.'%;'.$r_f_b_smw.'"';
+}
+?>
+<style>
+h1{font-size:1.5rem;word-break:break-all;}
+.floor_win{background:<?php echo $r_f_co;?>;padding:0.5rem;border-radius:0.25rem;}
+.floor_con{background:<?php echo $r_f_co;?>;font-size:0.8rem;border-radius:0.25rem;margin:0;padding: 1.2rem 0.8rem 0.5rem!important;}
+<?php if($r_f_b_t!='0'){ ?>.floor_con dd{border-bottom: <?php echo $r_f_b_t;?> 1px <?php echo $r_f_b_c;?>;padding-bottom:0.1rem;}<?php } ?>
+
+</style>

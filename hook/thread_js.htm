@@ -1,0 +1,134 @@
+<script>
+var p_u='<?php echo url("post-rfloor-p_u-1");?>';
+function showrepeat(pid){
+var repeat = $('#repeat_'+pid);
+var floor_win = $('#floor_win'+pid);
+var floor_c = '';
+var jfloor = xn.intval($('#r_f_c_'+pid).val());
+if(jfloor>0){floor_c = '('+jfloor+')';}
+if(repeat.css("display")=="block"){
+repeat.slideToggle(500,function(){
+floor_win.html('<i class="icon-comment-o"></i> 回复'+floor_c);
+floor_win.removeClass('floor_win');
+});
+}else{
+repeat.slideDown(500,function(){
+$('#floor_win'+pid).html('收起回复');
+floor_win.addClass('floor_win');
+var t=$("#message"+pid).val(); 
+$("#message"+pid).val("").focus().val(t);
+if(floor_c=='') showform(pid,'');
+});
+}
+}
+function showfloor(pid){
+var pushfloor = $('#pushfloor_'+pid).html();
+$(pushfloor).hide().insertBefore($('#pushfloor_'+pid)).slideDown(300,function(){
+$('#floor_note'+pid).css("display",'none');
+$('#floor_page'+pid).css("display",'block');
+});
+}
+function showpage_n(pid){
+	var np = parseInt($('#np_'+pid).val());
+	showpage(pid,np+1);
+}
+function showpage_p(pid){
+	var np = parseInt($('#np_'+pid).val());
+	showpage(pid,np-1);
+}
+function showpage(pid,page){
+	var p_r='<?php echo url("thread-rfloor-p_r-1");?>';
+	var p_i=p_r.replace('p_r',pid);
+	var floorform = $('#floor_'+pid);
+	var np = parseInt($('#np_'+pid).val());
+	var mp = parseInt($('#mp_'+pid).val());
+	if(page<1){
+		if(np==1) $.alert('已经是第一页了');
+		return false;
+	}else if(page>mp){
+		if(np==mp) $.alert('已经是最后一页了');
+		return false;
+	}
+	if(page==1){
+		if(np==1){
+		$.alert('已经是第一页了');
+		return false;
+		}
+	}
+	if(page==mp){
+		if(np==mp){
+		$.alert('已经是最后一页了');
+		return false;
+		}
+	}
+	$.xpost(p_i,{pageno:page}, function(code, message) {
+		if(code == 0) {
+			floorform.hide().html(message).fadeIn(500);
+			$('#np_'+pid).val(page);
+			$('#np'+pid).html(page);
+			if(page==1){$('#s_p'+pid).fadeOut(100);}else{$('#s_p'+pid).show(100);}
+			if(page==mp){$('#e_p'+pid).fadeOut(100);}else{$('#e_p'+pid).show(100);}
+		} else {
+			$.alert(message);
+		}
+	});
+}
+function delrfloor(pid,delfloor){
+	var p_i=p_u.replace('p_u',pid);
+	var jfloor = $('#r_f_c_'+pid);
+	var jfloorval = xn.intval(jfloor.val());
+	$.xpost(p_i,{delfloor:delfloor}, function(code, message) {
+		if(code == 0) {
+			$('#pf_'+pid+'_'+delfloor).fadeOut(200);
+			jfloor.val(jfloorval-1);
+		} else {
+			$.alert(message);
+		}
+	});
+}
+function showform(pid,un){
+var p_i=p_u.replace('p_u',pid);
+var repeatform = $('#repeatform'+pid);
+var t=$("#message"+pid).val();
+if(un!=null && un!=''){t='回复 '+un+': ';}
+if(repeatform.html()!="" && repeatform.css("display")=="block" && un==null){repeatform.slideUp(300);}else{
+if(t==null || repeatform.html()==""){
+repeatform.hide().html('<form action="'+p_i+'" onsubmit="return floor_reply('+pid+');" method="post" id="floor_reply_form'+pid+'" class="d-block"><div class="message mt-1"><textarea class="form-control" name="message" id="message'+pid+'">'+t+'</textarea></div><div class="text-muted mt-2 small"><button type="submit" class="btn btn-sm btn-secondary" id="submit'+pid+'" data-loading-text="<?php echo lang('submiting');?>..."> <?php echo lang('post_create');?> </button></div></form>').slideDown(300);
+}else{repeatform.slideDown(300);}
+$("#message"+pid).val("").focus().val(t);
+}
+}
+function floor_reply(pid)
+{
+<?php 
+if(empty($user)){
+echo 'window.location.href="'.url('user-login').'";
+';
+}
+else{
+?>
+var floorform = $('#floor_reply_form'+pid);
+var floorsubmit = $('#submit'+pid);
+var postdata = floorform.serialize();
+floorform.reset();
+floorsubmit.button('loading');
+$.xpost(floorform.attr('action'), postdata, function(code, message) {
+	if(code == 0) {
+		$(message).hide().insertBefore($('#pushfloor_'+pid)).slideDown(300);
+		floorsubmit.button('reset');
+		showform(pid,'');
+		var jfloor = $('#r_f_c_'+pid);
+		jfloor.val(xn.intval(jfloor.val()) + 1);
+		$('#message'+pid).val('');
+		$('#message'+pid).alert();
+	} else {
+		$.alert(message);
+		floorsubmit.button('reset');
+	}
+});
+<?php
+}
+?>
+return false;
+}
+</script>

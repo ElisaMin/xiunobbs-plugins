@@ -1,0 +1,101 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+<link rel="stylesheet" href="../plugin/sl_repeat_follow/view/farbtastic.css" type="text/css" />
+<div class="row">
+	<div class="col-lg-12">
+		<div class="card">
+			<div class="card-body"> 
+				<form action="<?php echo url("plugin-setting-sl_repeat_follow");?>" method="post" id="form">
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">每页显示数量：</label>
+						<div class="col-sm-10">
+							<?php echo form_text('sl_repeat_follow_perpage', isset($setting['sl_repeat_follow_perpage'])? $setting['sl_repeat_follow_perpage']:10, 100); ?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">宽度（百分比）：</label>
+						<div class="col-md-3">
+							<div class="input-group mb-1">
+								<?php echo form_text('sl_repeat_follow_b_w', isset($setting['sl_repeat_follow_b_w'])? $setting['sl_repeat_follow_b_w']:80, 100); ?>
+								<div class="input-group-prepend"><span class="input-group-text">0为自动</span></div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="input-group mb-1">
+								<div class="input-group-prepend"><span class="input-group-text">最小</span></div>
+								<?php echo form_text('sl_repeat_follow_b_mw', isset($setting['sl_repeat_follow_b_mw'])? $setting['sl_repeat_follow_b_mw']:200, 100); ?>
+								<div class="input-group-prepend"><span class="input-group-text">像素（px）</span></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">背景颜色：</label>
+						<div class="col-md-3">
+							<div class="input-group mb-1">
+								<?php echo form_text('sl_repeat_follow_color', isset($setting['sl_repeat_follow_color'])? $setting['sl_repeat_follow_color']:'#082f3e', 100); ?>
+							</div>
+							<div id="picker"></div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">显示下划线：</label>
+						<div class="col-md-5">
+							<div class="input-group mb-1">
+								<?php echo form_text('sl_repeat_follow_b_c', isset($setting['sl_repeat_follow_b_c'])? $setting['sl_repeat_follow_b_c']:'#082f3e', 100); ?>
+								<?php $r_b_c=isset($setting['sl_repeat_follow_b_t']) ? $setting['sl_repeat_follow_b_t']:'0';  ?>
+								<select name="sl_repeat_follow_b_t" id="sl_repeat_follow_b_t" class="form-control">
+									<option value="0" <?php if ($r_b_c == '0'){ ?>selected="selected"<?php } ?>>禁用</option>
+									<option value="solid" <?php if ($r_b_c == 'solid'){ ?>selected="selected"<?php } ?>>实线————————</option>
+									<option value="dashed" <?php if ($r_b_c == 'dashed'){ ?>selected="selected"<?php } ?>>虚线----------------</option>
+									<option value="dotted" <?php if ($r_b_c == 'dotted'){ ?>selected="selected"<?php } ?>>点线................</option>
+								</select>
+							</div>
+							<div id="picker2"></div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"></label>
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary btn-block" id="submit" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+							<a role="button" class="btn btn-secondary btn-block mt-3" href="javascript:history.back();"><?php echo lang('back');?></a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+	
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+<script type="text/javascript" src="../plugin/sl_repeat_follow/view/js/farbtastic.js"></script>
+<link rel="stylesheet" href="../plugin/sl_repeat_follow/view/farbtastic.css" type="text/css" />
+ <script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    $('#picker').farbtastic('#sl_repeat_follow_color');
+    $('#picker2').farbtastic('#sl_repeat_follow_b_c');
+  });
+ </script>
+<script>
+var jform = $("#form");
+var jsubmit = $("#submit");
+var referer = '<?php echo url("plugin-setting-sl_repeat_follow");?>';
+jform.on('submit', function(){
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(500).button('reset').location(referer);
+			return;
+		} else {
+			$.alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+</script>

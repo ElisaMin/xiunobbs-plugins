@@ -1,0 +1,57 @@
+<div class="d-flex justify-content-between small mt-3">
+								<div>
+								</div>
+								<div class="text-right"<?php echo $r_f_b_s;?>>
+									<span class="date text-grey ml-2"><?php echo $_post['create_date_fmt'];?></span>
+									<!--{hook post_list_inc_create_date_after.htm}-->
+								<?php
+								if($_post['r_f_c']>0){
+									$maxpage=ceil($_post['r_f_c']/$r_f_g);
+									$pagelist='';
+									if($maxpage>1)
+									{
+										$pagelist='<span style="display:none;font-size:1.1rem;" id="s_p'.$_post['pid'].'"><a href="javascript:showpage('.$_post['pid'].',1)"><i class="icon-angle-double-left"></i></a><a class="ml-2 mr-2" href="javascript:showpage_p('.$_post['pid'].')"><i class="icon-angle-left"></i></a></span><font class="font-weight-bold" id="np'.$_post['pid'].'">1</font>/'.$maxpage.'<span id="e_p'.$_post['pid'].'" style="font-size:1.1rem;"><a class="ml-2 mr-2" href="javascript:showpage_n('.$_post['pid'].')"><i class="icon-angle-right"></i></a><a href="javascript:showpage('.$_post['pid'].','.$maxpage.')"><i class="icon-angle-double-right"></i></a></span><input type="hidden" id="mp_'.$_post['pid'].'" value="'.$maxpage.'" /><input type="hidden" id="np_'.$_post['pid'].'" value="1" />';
+									}
+									echo '<a href="javascript:showrepeat('.$_post['pid'].');" class="ml-2 post_update floor_win" id="floor_win'.$_post['pid'].'">收起回复</a>
+									<div id="repeat_'.$_post['pid'].'">
+										<div class="floor_con">
+											<input type="hidden" name="r_f_c" id="r_f_c_'.$_post['pid'].'" value="'.$_post['r_f_c'].'" />
+											<dl style="margin-bottom:0.5rem;"><div id="floor_'.$_post['pid'].'">';
+												$n=0;$floor_content='';
+												$repeat_follows=json_decode($_post['repeat_follow'], true);
+												$message_t=$deltag='';
+												foreach($repeat_follows as $repeat_follow){
+													if($repeat_follow['uid']==$uid || $_post['floormanage']) $deltag='<a href="javascript:delrfloor('.$_post['pid'].',\''.$repeat_follow['fl'].'\');" class="post_update mr-2">删除</a>';
+													if($repeat_follow['t_uid']>0 && $repeat_follow['t_username']!='') $message_t='回复 <a href="'.url("user-".$repeat_follow['t_uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['t_username'].'</a>: ';
+													if($n<$halfpage) echo '<dd class="text-left media" id="pf_'.$_post['pid'].'_'.$repeat_follow['fl'].'"><a href="'.url("user-".$repeat_follow['uid']).'" class="mr-2"><img class="avatar-3" onerror="this.src=\'view/img/avatar.png\'"  src="'.$repeat_follow['avatar_url'].'"></a><div style="width:100%;"><span class="text-left"><a href="'.url("user-".$repeat_follow['uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['username'].'</a>: '.$message_t.$repeat_follow['message'].'</span><div class="text-muted text-right">'.$deltag.humandate($repeat_follow['update']).'<a href="javascript:showform('.$_post['pid'].',\''.$repeat_follow['username'].'\');" class="post_update ml-2">回复</a></div></div></dd>';
+													elseif($n<$r_f_g) $floor_content.='<dd class="text-left media" id="pf_'.$_post['pid'].'_'.$repeat_follow['fl'].'"><a href="'.url("user-".$repeat_follow['uid']).'" class="mr-2"><img class="avatar-3" onerror="this.src=\'view/img/avatar.png\'"  src="'.$repeat_follow['avatar_url'].'"></a><div style="width:100%;"><span class="text-left"><a href="'.url("user-".$repeat_follow['uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['username'].'</a>: '.$message_t.$repeat_follow['message'].'</span><div class="text-muted text-right">'.$deltag.humandate($repeat_follow['update']).'<a href="javascript:showform('.$_post['pid'].',\''.$repeat_follow['username'].'\');" class="post_update ml-2">回复</a></div></div></dd>';
+													else break;
+													$message_t=$deltag='';
+													$n++;
+												}
+											echo '<div id="pushfloor_'.$_post['pid'].'" style="display:none;">'.$floor_content.'</div></div>
+												<div id="pushfloor'.$_post['pid'].'" class="justify-content-between d-flex">
+													<div id="floor_note'.$_post['pid'].'" class="text-left">';if($_post['r_f_c']>$halfpage){echo '还有'.($_post['r_f_c']-$halfpage).'条回复，<a href="javascript:showfloor('.$_post['pid'].')">查看</a>';}echo '</div><div id="floor_page'.$_post['pid'].'" style="display:none;">'.$pagelist.'</div>
+													<div class="text-right"><button type="submit" class="btn btn-sm btn-secondary" onclick="javascript:showform('.$_post['pid'].');" id="submit"> 我说一句 </button></div>
+												</div>
+											</dl>
+											<div id="repeatform'.$_post['pid'].'" class="mb-2"></div>
+										</div>
+									</div>';
+									}
+									else{
+									?>
+									<a href="javascript:showrepeat(<?php echo $_post['pid'];?>);" class="ml-2 post_update" id="floor_win<?php echo $_post['pid'];?>"><i class="icon-comment-o"></i> 回复</a>
+									<div style="display:none;" id="repeat_<?php echo $_post['pid'];?>">
+										<div class="floor_con">
+											<input type="hidden" name="r_f_c" id="r_f_c_<?php echo $_post['pid'];?>" value="0" />
+											<dl class="text-white" style="margin-bottom:0.5rem;">
+												<div id="pushfloor_<?php echo $_post['pid'];?>"></div>
+											</dl>
+											<div id="repeatform<?php echo $_post['pid'];?>" class="mb-2">
+											</div>
+										</div>
+									</div>
+									<?php } ?>
+								</div>
+							</div>

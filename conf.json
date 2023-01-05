@@ -1,0 +1,10 @@
+{
+    "name": "回复楼中楼",
+    "brief": "回复楼中楼，类贴吧。<br />测试地址：<a href='http://www.qisip.cn/thread-42.htm'>qisip.cn</a>",
+    "version": "1.3",
+    "bbs_version": "4.0",
+    "installed": 1,
+    "enable": 1,
+    "hooks_rank": [],
+    "dependencies": []
+}
