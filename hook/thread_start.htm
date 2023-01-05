@@ -1,21 +1,23 @@
 <?php
-$perpage=setting_get('sl_repeat_follow_perpage');
-$color=setting_get('sl_repeat_follow_color');
-$r_f_b_t=setting_get('sl_repeat_follow_b_t');
-$r_f_b_c=setting_get('sl_repeat_follow_b_c');
-$r_f_b_w=setting_get('sl_repeat_follow_b_w');
-$r_f_b_mw=setting_get('sl_repeat_follow_b_mw');
-$halfpage=ceil($perpage/2);
-$r_f_b_s=$r_f_b_smw='';
-if($r_f_b_w>0){
-    if($r_f_b_mw>0 && $r_f_b_w<100) $r_f_b_smw='min-width:'.$r_f_b_mw.'px;"';
-    $r_f_b_s=' style="width:'.$r_f_b_w.'%;'.$r_f_b_smw.'"';
+include_once _include(APP_PATH."plugin/sl_repeat_follow/utils/conf.php");
+$setting = getRepeatConfig();
+$perPage = $setting[peerPage];
+$color=$setting[backgroundColor];
+$line_style=$setting[lineStyle];
+$line_color=$setting[lineColor];
+$b_width=$setting[width];
+$b_min_width=$setting[minWidth];
+$half_page=ceil($perPage/2);
+$style_value=$b_style='';
+if($b_width>0){
+    if($b_min_width>0 && $b_width<100) $b_style='min-width:'.$b_min_width.'px;"';
+    $style_value=' style="width:'.$b_width.'%;'.$b_style.'"';
 }
 ?>
 <style>
+    .floor{background:<?=$color?>;border-radius:0.25rem;}
     h1{font-size:1.5rem;word-break:break-all;}
-    .floor_win{background:<?php echo $color;?>;padding:0.5rem;border-radius:0.25rem;}
-    .floor_con{background:<?php echo $color;?>;font-size:0.8rem;border-radius:0.25rem;margin:0;padding: 1.2rem 0.8rem 0.5rem!important;}
-    <?php if($r_f_b_t!='0'){ ?>.floor_con dd{border-bottom: <?php echo $r_f_b_t;?> 1px <?php echo $r_f_b_c;?>;padding-bottom:0.1rem;}<?php } ?>
-
+    .floor.win{padding:0.5rem;;}
+    .floor.con{font-size:0.8rem;margin:0;padding: 1.2rem 0.8rem 0.5rem!important;}  <?php if ($line_style!='0')
+echo".floor.con dd{border-bottom:$line_style 1px $line_color;padding-bottom:0.1rem}" ?>
 </style>

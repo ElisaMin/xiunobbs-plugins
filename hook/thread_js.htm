@@ -9,12 +9,12 @@
         if(repeat.css("display")==="block"){
             repeat.slideToggle(500,function(){
                 floor_win.html('<i class="icon-comment-o"></i> 回复'+floor_c);
-                floor_win.removeClass('floor_win');
+                floor_win.removeClass("floor win");
             });
         }else{
             repeat.slideDown(500,function(){
                 $('#floor_win'+pid).html('收起回复');
-                floor_win.addClass('floor_win');
+                floor_win.addClass("floor win");
                 var t=$("#message"+pid).val();
                 $("#message"+pid).val("").focus().val(t);
                 if(floor_c=='') showform(pid,'');
