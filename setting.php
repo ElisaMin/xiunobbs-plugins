@@ -12,6 +12,6 @@ if($method == 'GET') {
         width => param('b_w'),
         minWidth => param('b_mw'),
     ]) ? 0 : 1 ;
-    message(-1, "修改". $r = $r == 0 ? "成功": "失败");
-    echo "<script>alert('$r')</script>";
+    message($r, "修改".($r == 0 ? "成功": "失败"));
+
 }

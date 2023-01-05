@@ -7,9 +7,9 @@ const minWidth = "minWidth";
 const lineStyle = "line";
 const lineColor = "lnColor";
 
-function getRepeatConfig(): array {
+function getRepeatConfig():array {
     $conf = kv_get("sl_follow_repeat_json_conf");
-    if (!empty($conf)) return json_decode($conf);
+    if (!empty($conf)) return (json_decode($conf,true));
     return [
         backgroundColor=> setting_get('sl_repeat_follow_color') ?? "#082f3e",
         peerPage=> setting_get('sl_repeat_follow_perpage') ?? 10,
@@ -23,12 +23,12 @@ function getRepeatConfValueOrDefault(array $conf, string $key) {
     return $conf[$key] ?? getRepeatConfig()[$key];
 }
 function setRepeatConfig(array $conf):bool {
-    return kv_set("sl_follow_repeat_json_conf",[
+    return kv_set("sl_follow_repeat_json_conf",json_encode([
         backgroundColor=> getRepeatConfValueOrDefault($conf,backgroundColor),
         peerPage=> getRepeatConfValueOrDefault($conf,peerPage),
         width=> getRepeatConfValueOrDefault($conf,width),
         minWidth=> getRepeatConfValueOrDefault($conf,minWidth),
         lineStyle=> getRepeatConfValueOrDefault($conf,lineStyle),
         lineColor=> getRepeatConfValueOrDefault($conf,lineColor),
-    ]);
+    ]));
 }
