@@ -26,8 +26,23 @@ function update_repeat(array $data) {
 function update_repeat_and_result(array $data) {
 
 }
-function get_floor_html($filter) {
+
+function clean_html($html) {
+    $html = htmlspecialchars($html);
+    return trim(xn_html_safe($html));
+}
+function get_all_floor_html($data,$pid,$uid,$comment,$filter) {
     $filter = empty($filter) ? function () { return true; } : $filter;
+    $html = '';
+    foreach ($data as $index => $item) {
+        if ($filter($item,$index)) {
+            $html.=get_floor_html_dd($item,$pid,$data['uid'] == $uid||$comment['floormanage']);
+        }
+    }
+    return $html;
+}
+function get_floor_html_dd(array $repeat_follow,$pid,bool $del) {
+    return include "plugin/sl_repeat_follow/hook/inside_post.phtml";
 }
 if($action == 'rfloor') {
 
@@ -76,11 +91,9 @@ if($action == 'rfloor') {
                     $message_t='回复 <a href="'.url("user-".$t_uid).'" class="text-muted font-weight-bold">'.$t_username.'</a>: ';
                 }
             }
-            $message = htmlspecialchars($message);
-            $message = trim(xn_html_safe($message));
-            $message = preg_replace("#[ ]{2,}#is"," ",str_replace(array("\n","\r","\t"),array(' ',' ',' '),$message));
+            $message = clean_html($message);
+            preg_replace("# {2,}#is"," ",str_replace(array("\n","\r","\t"),array(' ',' ',' '),$message));
             empty($message) AND message('message'.$pid, lang('please_input_message'));
-
             xn_strlen($message) > 2028000 AND message('message', lang('message_too_long'));
             if(function_exists("notice_send")){
                 $thread['subject'] = notice_substr($thread['subject'], 20);
@@ -90,6 +103,7 @@ if($action == 'rfloor') {
             }
             $count=$count+1;
             $r_f_a=$comment['r_f_a']+1;
+
             $return_message='<dd class="text-left media" id="pf_'.$pid.'_'.$r_f_a.'"><a href="'.url("user-".$uid).'" class="mr-2"><img class="avatar-3" onerror="this.src=\'view/img/avatar.png\'"  src="'.$user['avatar_url'].'"></a><div style="width:100%;"><span class="text-left"><a href="'.url("user-".$uid).'" class="text-muted font-weight-bold">'.$user['username'].'</a>: '.$message_t.$message.'</span><div class="text-muted text-right"><a href="javascript:delrfloor('.$pid.',\''.$r_f_a.'\');" class="post_update mr-2">删除</a>'.humandate($time).'<a href="javascript:showform('.$pid.',\''.$user['username'].'\');" class="post_update ml-2">回复</a></div></div></dd>';
             $dir = substr(sprintf("%09d", $user['uid']), 0, 3);
             $user_face=$conf['upload_url']."avatar/$dir/$uid.png";
@@ -101,20 +115,16 @@ if($action == 'rfloor') {
         }
     } else { // GET
         if($pageno>0) {
-            $return_message='';
             $per_page=setting_get('sl_repeat_follow_perpage');
             $pageno=min($pageno,$count);
             $pageno=max($pageno,1);
-            $repeat_follows=json_decode($comment['repeat_follow'], true);
-            $repeat_follows=array_slice($repeat_follows,($pageno-1)*$per_page,$per_page);
-            $message_t=$deltag='';
-            foreach($repeat_follows as $repeat_follow){
-                if($repeat_follow['uid']==$uid || $comment['floormanage']) $deltag='<a href="javascript:delrfloor('.$pid.',\''.$repeat_follow['fl'].'\');" class="post_update mr-2">删除</a>';
-                if($repeat_follow['t_uid']>0 && $repeat_follow['t_username']!='') $message_t='回复 <a href="'.url("user-".$repeat_follow['t_uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['t_username'].'</a>: ';
-                $return_message.='<dd class="text-left media" id="pf_'.$pid.'_'.$repeat_follow['fl'].'"><a href="'.url("user-".$repeat_follow['uid']).'" class="mr-2"><img class="avatar-3" onerror="this.src=\'view/img/avatar.png\'"  src="'.$repeat_follow['avatar_url'].'"></a><div style="width:100%;"><span class="text-left"><a href="'.url("user-".$repeat_follow['uid']).'" class="text-muted font-weight-bold">'.$repeat_follow['username'].'</a>: '.$message_t.$repeat_follow['message'].'</span><div class="text-muted text-right">'.$deltag.humandate($repeat_follow['update']).'<a href="javascript:showform('.$pid.',\''.$repeat_follow['username'].'\');" class="post_update ml-2">回复</a></div></div></dd>';
-                $message_t=$deltag='';
-            }
-            message(0,$return_message.'<div id="pushfloor_'.$pid.'" style="display:none;"></div>');
+            $return_message = get_all_floor_html(
+                array_slice($repeats,($pageno-1)*$per_page,$per_page),
+                $pid,$uid,$comment,null
+            );
+            $return_message = clean_html($return_message);
+            $return_message.= '<div id="pushfloor_'.$pid.'" style="display:none;"></div>';
+            message(0,$return_message);
         }
     }
 
