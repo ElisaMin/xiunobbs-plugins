@@ -43,7 +43,7 @@ function update_repeat(array $data,$pid) {
     $count = 0;
     $lastIndex = 0;
     if (!empty($data)) {
-        if (!array_multisort($data,'fl')) return xn_error(-255,"sort failed");
+        if (!usort($data,fn($it,$other)=> $it['fl']<=>$other['fl'])) return xn_error(-255,"sort failed");
         $lastIndex = intval($data[array_key_last($data)]["fl"]);
         $count = count($data);
     }
@@ -51,8 +51,8 @@ function update_repeat(array $data,$pid) {
     empty($data) && $data = "";
     return db_update("post",["pid"=>$pid],[
         "repeat_follow"=>$data,
-        'r-f-c'=>$count,
-        'r-f-a'=>$lastIndex,
+        'r_f_c'=>$count,
+        'r_f_a'=>$lastIndex,
     ]);
 }
 function clean_html($html): string{

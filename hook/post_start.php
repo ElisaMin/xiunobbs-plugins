@@ -26,7 +26,7 @@ if($action == 'rfloor') {
                 break;
             }
         }
-        update_repeat($repeats,$pid) AND message(-1, lang('delete_failed'));
+        !update_repeat($repeats,$pid) AND message(-1, lang('delete_failed'));
         message(0,"delete_successfully");
         return true;
     } elseif(key_exists("repeat_msg",$comment)) {
@@ -34,17 +34,17 @@ if($action == 'rfloor') {
         $count=$count+1;
         $data = [
             "fl" => $comment['r_f_a']+1,
-            "uid" => $uid,
+            "uid" => $user['uid'],
             "username" => $user["username"],
-            "avatar_url"=>$conf['upload_url']."avatar/".substr(sprintf("%09d", $user['uid']), 0, 3)."/$uid.png",
+            "avatar_url"=>$user["avatar_url"],
             "update"=>$time,
             "t_username" => trim(str_replace('回复','',strchr($message,':',true))),
         ];
-        $data["message"] = $message;
-        $data["t_uid"] = empty($data["t_username"]) ? user_read_by_username($data["t_username"]) : 0;
+        $data["t_uid"] = !empty($data["t_username"]) ? user_read_by_username($data["t_username"])['uid'] : 0;
+        $data["message"] = $data["t_uid"] == 0 ? $message : trim(strchr($message,':'),':');
         $repeats[] = $data;
 
-        update_repeat($repeats,$pid) AND message(-1, lang('update_post_failed'));
+        !update_repeat($repeats,$pid) AND message(-1, lang('update_post_failed'));
 
 //        if(function_exists("notice_send")){
 //            $thread['subject'] = notice_substr($thread['subject'], 20);
