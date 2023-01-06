@@ -8,5 +8,6 @@ if($action == 'rfloor') {
         $html = get_paged_floor_html($repeats, $page, $pid, $uid, $comment,);
         message(0, $html);
     }
+    return false;
 }
 ?><?php

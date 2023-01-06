@@ -54,6 +54,6 @@ if($action == 'rfloor') {
             message(0,$html);
         }
     }
-
+    return false;
 }
 ?><?php

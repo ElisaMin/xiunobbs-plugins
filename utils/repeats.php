@@ -64,7 +64,7 @@ function get_all_floor_html($data,$pid,$uid,$comment,$filter):string {
     $html = '';
     foreach ($data as $index => $item) {
         if ($filter($item,$index)) {
-            $html.=get_floor_html_dd($item,$pid,$data['uid'] == $uid||$comment['floormanage']);
+            $html.=get_floor_html_dd($item,$pid,$item['uid'] == $uid||$comment['floormanage']);
         }
     }
     return $html;
@@ -79,6 +79,8 @@ function get_paged_floor_html($data,$page,$pid,$uid,$comment):string {
         $pid,$uid,$comment,null
     );
 }
-function get_floor_html_dd(array $repeat_follow,$pid,bool $del) {
-    return include "plugin/sl_repeat_follow/hook/inside_post.phtml";
+function get_floor_html_dd(array $repeat_follow,$pid,bool $del):string {
+    ob_start();
+    include "plugin/sl_repeat_follow/hook/inside_post.phtml";
+    return ob_get_clean();
 }
