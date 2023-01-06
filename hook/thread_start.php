@@ -1,7 +1,7 @@
 ?><?php
 if($action == 'rfloor') {
     $pid = param(2);
-    $pageno = param('pageno', 0);
+    $pageno = param('p', 0);
     $delfloor = param('delfloor', false);
     $post = post_read($pid);
     empty($post) AND message(-1, lang('post_not_exists'));

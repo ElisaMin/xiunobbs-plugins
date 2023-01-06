@@ -61,7 +61,7 @@
                 return false;
             }
         }
-        $.xpost(p_i,{pageno:page}, function(code, message) {
+        $.xget(p_i+"?p="+page,, function(code, message) {
             if(code == 0) {
                 floorform.hide().html(message).fadeIn(500);
                 $('#np_'+pid).val(page);
