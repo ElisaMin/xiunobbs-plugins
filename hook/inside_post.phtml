@@ -1,4 +1,8 @@
-<dd class="text-left media" id="pf_<?= $pid.'_'.$repeat_follow['fl']?>">
+<?php
+$del = $repeat_follow['uid']==$uid || $_post['floormanage'];
+$the_uid = $repeat_follow['uid'];
+?>
+<dd class="text-left media" id="pf_<?= $pid?>_<?=$repeat_follow['fl']?>">
     <a href="<?= url("user-".$repeat_follow['uid']) ?>" class="mr-2">
         <img class="avatar-3" src="<?= $repeat_follow['avatar_url']?>">
     </a>
@@ -11,9 +15,9 @@
         </span>
         <div class="text-muted text-right">
             <?php if ($repeat_follow['uid']==$uid || $_post['floormanage']) { ?>
-                <a href="javascript:delrfloor('<?=$pid.',\''.$repeat_follow['fl']?>\'');" class="post_update mr-2">删除</a>
+                <a href="javascript:delrfloor('<?=$pid?>','<?=$repeat_follow['fl']?>');" class="post_update mr-2">删除</a>
             <?php } echo humandate($repeat_follow['update']) ?>
-            <a href="javascript:showform('<?=$pid.',\''.$repeat_follow['username']?>\'');" class="post_update ml-2">回复</a>
+            <a href="javascript:showform('<?=$pid?>','<?=$repeat_follow['username']?>');" class="post_update ml-2">回复</a>
         </div>
     </div>
 </dd>
