@@ -1,40 +1,59 @@
 ?><?php
-if($action == 'rfloor') {
+function error_no_comment() {
+    message(-1, lang('post_not_exists'));
+    exit;
+}
+function get_validate_comment() {
     $pid = param(2);
+    if (empty($pid)) return false;
     $comment = post_read($pid);
-    empty($comment) AND message(-1, lang('post_not_exists'));
-    $delfloor = param('delfloor', false);
+    if (empty($comment)) return false;
+    $comment['pid'] = $pid;
 
-    $pageno = param('pageno', 0);
+    $repeats = $comment['repeat_follow'];
+    if (empty($repeats) && param("pageno",0) > 0)
+        return false;
+    $comment["page_no"] = param("pageno",0);
 
-    $m_s=',';
-    if(empty($comment['repeat_follow'])) {
-        $m_s=$repeat_follows='';
-        if($pageno>0) message(-1, lang('post_not_exists'));
-    }
-    else $repeat_follows=$comment['repeat_follow'];
-    if($delfloor!==false)  {
-        empty($repeat_follows) AND message(-1, lang('post_not_exists'));
-        $arrs=json_decode($repeat_follows,true);
-        $n=0;
-        $m_s=$message_json='';
-        foreach($arrs as $arr){
-            if($arr['fl']!=$delfloor) {
-                if($n>0) $m_s=',';
-                $message_json.=$m_s.'{"fl":"'.$arr['fl'].'","uid":"'.$arr['uid'].'","username":"'.$arr['username'].'","avatar_url":"'.$arr['avatar_url'].'","t_uid":"'.$arr['t_uid'].'","t_username":"'.$arr['t_username'].'","message":"'.str_replace(array('"','\\',),array('\"','\\'.'\\'),$arr['message']).'","update":"'.$arr['update'].'"}';
-                $n++;
+    $del = param('delfloor');
+    if (!empty($del)) $comment['del'] = $del;
+
+    return $comment;
+}
+function update_repeat(array $data) {
+
+}
+function update_repeat_and_result(array $data) {
+
+}
+if($action == 'rfloor') {
+
+    $comment = get_validate_comment();
+    if (empty($comment)) error_no_comment();
+    $pid = &$comment['pid'];
+
+    $repeats = json_decode($comment['repeat_follow'],true);
+    // del
+    if (key_exists('del',$comment)) {
+        if (empty($repeats)) message(1,lang('data_is_empty'));
+        $fl = $comment['del'];
+        foreach ($repeats as $i => $repeat) {
+            if ($repeat['fl']==$fl) {
+                unset($repeat);
+                break;
             }
         }
-        if($message_json!=''){
-            $message_json='['.$message_json.']';
-            $r = db_update('post', array('pid'=>$pid), array('repeat_follow'=>$message_json, 'r_f_c'=>$n));
-        }
-        else $r = db_update('post', array('pid'=>$pid), array('repeat_follow'=>'', 'r_f_c'=>0, 'r_f_a'=>0));
-        $r === FALSE AND message(-1, lang('update_post_failed'));
-        message(0, lang('delete_successfully'));
+        update_repeat_and_result($repeats);
+        return true;
+    } else {
+
     }
+    //fixme 继续
+    $message_start=',';
+    $repeat_follows=$comment['repeat_follow'];
     $repeat_follows=substr($repeat_follows,1,-1);
-    empty($repeat_follows) AND $m_s=$repeat_follows='';
+    empty($repeat_follows) AND $message_start=$repeat_follows='';
+    $count = $comment['r_f_c'];
     $tid = $comment['tid'];
     $thread['uid']=$comment['uid'];
     $thread['subject']=$comment['message_fmt'];
@@ -43,7 +62,7 @@ if($action == 'rfloor') {
     {
         $return_message='';
         $r_f_g=setting_get('sl_repeat_follow_perpage');
-        $pageno=min($pageno,$comment['r_f_c']);
+        $pageno=min($pageno,$count);
         $pageno=max($pageno,1);
         $repeat_follows=json_decode($comment['repeat_follow'], true);
         $repeat_follows=array_slice($repeat_follows,($pageno-1)*$r_f_g,$r_f_g);
@@ -82,13 +101,13 @@ if($action == 'rfloor') {
         $recvuid = $thread['uid'];
         notice_send($uid, $recvuid, $notice_message, 2);
     }
-    $r_f_c=$comment['r_f_c']+1;
+    $count=$count+1;
     $r_f_a=$comment['r_f_a']+1;
     $return_message='<dd class="text-left media" id="pf_'.$pid.'_'.$r_f_a.'"><a href="'.url("user-".$uid).'" class="mr-2"><img class="avatar-3" onerror="this.src=\'view/img/avatar.png\'"  src="'.$user['avatar_url'].'"></a><div style="width:100%;"><span class="text-left"><a href="'.url("user-".$uid).'" class="text-muted font-weight-bold">'.$user['username'].'</a>: '.$message_t.$message.'</span><div class="text-muted text-right"><a href="javascript:delrfloor('.$pid.',\''.$r_f_a.'\');" class="post_update mr-2">删除</a>'.humandate($time).'<a href="javascript:showform('.$pid.',\''.$user['username'].'\');" class="post_update ml-2">回复</a></div></div></dd>';
     $dir = substr(sprintf("%09d", $user['uid']), 0, 3);
     $user_face=$conf['upload_url']."avatar/$dir/$uid.png";
-    $message='['.$repeat_follows.$m_s.'{"fl":"'.$r_f_a.'","uid":"'.$uid.'","username":"'.$user['username'].'","avatar_url":"'.$user_face.'","t_uid":"'.$t_uid.'","t_username":"'.$t_username.'","message":"'.str_replace(array('"','\\'),array('\"','\\'.'\\'),$message).'","update":"'.$time.'"}]';
-    $r = db_update('post', array('pid'=>$pid), array('repeat_follow'=>$message, 'r_f_c'=>$r_f_c, 'r_f_a'=>$r_f_a));
+    $message='['.$repeat_follows.$message_start.'{"fl":"'.$r_f_a.'","uid":"'.$uid.'","username":"'.$user['username'].'","avatar_url":"'.$user_face.'","t_uid":"'.$t_uid.'","t_username":"'.$t_username.'","message":"'.str_replace(array('"','\\'),array('\"','\\'.'\\'),$message).'","update":"'.$time.'"}]';
+    $r = db_update('post', array('pid'=>$pid), array('repeat_follow'=>$message, 'r_f_c'=>$count, 'r_f_a'=>$r_f_a));
     $r === FALSE AND message(-1, lang('update_post_failed'));
     message(0,$return_message);
 }
