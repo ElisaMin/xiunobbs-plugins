@@ -1,5 +1,17 @@
 ?><?php include_once _include(APP_PATH."plugin/sl_repeat_follow/utils/repeats.php");
+if ($method=="GET" && $action=="replies") {
+    $pid = intval(param(2,-1));
+    if ($pid==!1) return;
 
+    all_replies(
+        intval(param(3,0)),
+        $pid,
+    );
+    return ;
+} elseif ($action=="reply") {
+    if ($method == "DELETE") del_replay(pid(),rid());
+    elseif ($method=="PUT") put_reply(pid(),rid(),uid(),msg(),$user,$time);
+}
 if($action == 'rfloor') {
 
     $uid ?? error_no_comment();
@@ -26,7 +38,7 @@ if($action == 'rfloor') {
                 break;
             }
         }
-        !update_repeat($repeats,$pid) AND message(-1, lang('delete_failed'));
+        !update_replies($repeats,$pid) AND message(-1, lang('delete_failed'));
         message(0,"delete_successfully");
         return true;
     } elseif(key_exists("repeat_msg",$comment)) {
@@ -44,7 +56,7 @@ if($action == 'rfloor') {
         $data["message"] = $data["t_uid"] == 0 ? $message : trim(strchr($message,':'),':');
         $repeats[] = $data;
 
-        !update_repeat($repeats,$pid) AND message(-1, lang('update_post_failed'));
+        !update_replies($repeats,$pid) AND message(-1, lang('update_post_failed'));
 
 //        if(function_exists("notice_send")){
 //            $thread['subject'] = notice_substr($thread['subject'], 20);
