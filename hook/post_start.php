@@ -114,12 +114,14 @@ if($action == 'rfloor') {
 
         }
     } else { // GET
-        if($pageno>0) {
-            $per_page=setting_get('sl_repeat_follow_perpage');
-            $pageno=min($pageno,$count);
-            $pageno=max($pageno,1);
+        $page_no = &$comment['page_no'];
+        if($page_no>0) {
+            include_once _include(APP_PATH."plugin/sl_repeat_follow/utils/conf.php");
+            $per_page=getRepeatConfig()[peerPage];
+            $page_no=min($page_no,$count);
+            $page_no=max($page_no,1);
             $return_message = get_all_floor_html(
-                array_slice($repeats,($pageno-1)*$per_page,$per_page),
+                array_slice($repeats,($page_no-1)*$per_page,$per_page),
                 $pid,$uid,$comment,null
             );
             $return_message = clean_html($return_message);
