@@ -1,0 +1,11 @@
+{
+    "name": "Restful Nginx支持",
+    "brief": "创建一个Restful Nginx Config供您导入。",
+    "version": "0.0.1",
+    "bbs_version": "4.0",
+    "installed": 1,
+    "enable": 1,
+    "hooks_rank": [],
+    "overwrites_rank": [],
+    "dependencies": []
+}
