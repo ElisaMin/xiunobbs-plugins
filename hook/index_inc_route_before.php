@@ -18,8 +18,8 @@ function gen_nginx_config_content() {
     $content = (array) $content[1];
 
     $content = array_map(function($action){
-        $content = "location $action { \n";
-        $content.= "   try_files @xiunobbs_rewrite =404; \n";
+        $content = "location /$action/ { \n";
+        $content.= "   try_files @xiunobbs_rewrite =502; \n";
         $content.= "}\n\n";
         return $content;
     },$content);
