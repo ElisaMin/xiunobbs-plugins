@@ -1,6 +1,6 @@
 <?php
 $r_uid = $repeat_follow['uid'];
-$del = $del ?? $r_uid==$uid || $_post['floormanage'];
+$del = $del ?? $r_uid==$uid  || ( $allowdelete ?? forum_access_mod($fid ?? $thread['fid'], $gid, 'allowdelete'));
 $usn = $repeat_follow['username'];
 $t_uid = $repeat_follow['t_uid'];
 $t_usn = $repeat_follow['t_username'];

@@ -1,3 +1,4 @@
+
 ?><?php include_once _include(APP_PATH."plugin/sl_repeat_follow/utils/repeats.php");
 if ($method=="GET" && $action=="replies") {
     $pid = intval(param(2,-1));
@@ -19,6 +20,7 @@ if($action == 'rfloor') {
     $user ?? error_no_comment();
     $conf ?? error_no_comment();
     $time ?? error_no_comment();
+    $gid ?? error_no_comment();
 
     $comment = get_validate_comment();
     if (empty($comment)) error_no_comment();
@@ -27,9 +29,18 @@ if($action == 'rfloor') {
     $repeats = json_decode($comment['repeat_follow'],true);
     $count = count($repeats);
 
-    if ($method!="POST") return false;
 
-    if (key_exists('del',$comment)) {
+    if ($method!="POST") {
+        $page = $comment['page_no'];
+        if (!empty($page)&&$page>0) {
+            $tmp = thread_read($comment['tid']);
+            empty($tmp) && message(-1,lang("thread_not_exists"));
+            $tmp = $tmp['fid'];
+            $tmp = forum_access_user($tmp, $gid, 'allowdelete');
+            $html = get_paged_floor_html($repeats, $page, $pid,$tmp);
+            message(0, $html);
+        }
+    }elseif (key_exists('del',$comment)) {
         if (empty($repeats)) message(1,lang('data_is_empty'));
         $fl = $comment['del'];
         foreach ($repeats as $i => $repeat) {

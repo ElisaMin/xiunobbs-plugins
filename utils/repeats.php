@@ -206,25 +206,21 @@ function clean_html($html): string{
     $html = htmlspecialchars($html);
     return trim(xn_html_safe($html));
 }
-function get_all_floor_html($data,$pid,$uid,$comment,$filter):string {
-    $filter = empty($filter) ? function () { return true; } : $filter;
+function get_all_floor_html($data,$pid,$allowdelete=false):string {
+    global $uid;
     $html = '';
-    foreach ($data as $index => $item) {
-        if ($filter($item,$index)) {
-            $html.=get_floor_html_dd($item,$pid,$item['uid'] == $uid||$comment['floormanage']);
-        }
+    foreach ($data as $item) {
+         $html.=get_floor_html_dd($item,$pid,$item['uid'] == $uid||$allowdelete);
     }
     return $html;
 }
-function get_paged_floor_html($data,$page,$pid,$uid,$comment):string {
+function get_paged_floor_html($data,$page,$pid,$allowdelete=false):string {
     include_once _include(APP_PATH."plugin/sl_repeat_follow/utils/conf.php");
     $per_page=getRepeatConfig()[peerPage];
     $page=min($page,count($data));
     $page=max($page,1);
-    return get_all_floor_html(
-        array_slice($data,($page-1)*$per_page,$per_page),
-        $pid,$uid,$comment,null
-    );
+    $data = array_slice($data,($page-1)*$per_page,$per_page);
+    return get_all_floor_html($data, $pid,);
 }
 function get_floor_html_dd(array $repeat_follow,$pid,bool $del):string {
     ob_start();
