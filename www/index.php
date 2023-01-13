@@ -20,6 +20,5 @@ include APP_PATH.'model/plugin.func.php';
 include _include(APP_PATH.'model.inc.php');
 include _include(APP_PATH.'index.inc.php');
 
-
 echo preg_replace("#=([\"|'])(view|plugin|upload|lang)#",'=$1/$2',ob_get_clean());;
 ?>
