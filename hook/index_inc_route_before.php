@@ -28,7 +28,7 @@ function gen_nginx_config_content() {
                 $j++;
             }
             $j = 1;
-            $content.="/?(.*) /index.php?";
+            $content.="/?(.*) /plugin/heizi_restful_nginx/www/index.php?";
             while ($j<$i) {
                 $content.="\$$j-";
                 $j++;
