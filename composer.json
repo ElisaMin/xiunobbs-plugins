@@ -1,0 +1,5 @@
+{
+    "require": {
+        "middlewares/minifier": "^2.0"
+    }
+}
