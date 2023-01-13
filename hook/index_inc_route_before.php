@@ -19,31 +19,28 @@ function gen_nginx_config_content() {
 
     $content = array_map(function($action){
         $content = "location /$action/ { \n";
-        $content.= "   try_files @xiunobbs_rewrite =502; \n";
+        $i = 2;
+        while ($i<14) {
+            $j = 1;
+            $content.="   rewrite ";
+            while ($j<$i) {
+                $content.="/([^/]*)";
+                $j++;
+            }
+            $j = 1;
+            $content.="/?(.*) /index.php?";
+            while ($j<$i) {
+                $content.="\$$j-";
+                $j++;
+            }
+            $content = substr($content,0,strlen($content)-1);
+            $content.=".htm\$$j last;\n";
+            $i++;
+        }
         $content.= "}\n\n";
         return $content;
     },$content);
     $content= implode("",$content);
-    $i = 13;
-    $content.="location @xiunobbs_rewrite {\n";
-    while ($i>1) {
-        $j = 1;
-        $content.="   rewrite ";
-        while ($j<$i) {
-            $content.="/([^/]*)";
-            $j++;
-        }
-        $j = 1;
-        $content.=" index.php?";
-        while ($j<$i) {
-            $content.="\$$j-";
-            $j++;
-        }
-        $content = substr($content,0,strlen($content)-1);
-        $content.=".htm last;\n";
-        $i--;
-    }
-    $content.="}\n\n";
     return $content;
 }
 
