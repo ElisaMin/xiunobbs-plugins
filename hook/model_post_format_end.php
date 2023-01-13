@@ -1,8 +1,8 @@
 $editor_md_config = kv_get('editor_md_config');
 
-include_once 'plugin/gmchina_xiuno_editormd/parser/'.$editor_md_config['parsedown_version'].'/Parsedown.php';
-include_once 'plugin/gmchina_xiuno_editormd/parser/'.$editor_md_config['parsedown_version'].'/ParsedownExtra.php';
-include_once 'plugin/gmchina_xiuno_editormd/purifier/HTMLPurifier.standalone.php';
+include_once APP_PATH.'plugin/gmchina_xiuno_editormd/parser/'.$editor_md_config['parsedown_version'].'/Parsedown.php';
+include_once APP_PATH.'plugin/gmchina_xiuno_editormd/parser/'.$editor_md_config['parsedown_version'].'/ParsedownExtra.php';
+include_once APP_PATH.'plugin/gmchina_xiuno_editormd/purifier/HTMLPurifier.standalone.php';
 $Parsedown = new Parsedown();
 if(!$editor_md_config['parsedown_version']=='1.5.4')
 {
